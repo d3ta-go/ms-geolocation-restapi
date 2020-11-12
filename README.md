@@ -1,2 +1,3 @@
-# project-template
-DDD Project Template in Go
+# ms-geolocation-restapi
+
+MicroService Interface/Presentation App: GeoLocation RestAPI
