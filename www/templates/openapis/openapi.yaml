@@ -1,0 +1,318 @@
+openapi: "3.0.3"
+
+info:
+  title: '{{index . "info.Title"}}'
+  description: '{{index . "info.Description"}}'
+  contact:
+    name: '{{index . "info.Contact.Name"}}'
+    url: '{{index . "info.Contact.URL"}}'
+    email: '{{index . "info.Contact.Email"}}'
+  license:
+    name: '{{index . "info.License.Name"}}'
+    url: '{{index . "info.License.URL"}}'
+  version: '{{index . "info.Version"}}'
+
+servers:
+  - url: "{scheme}://{host}"
+    description: Server
+    variables:
+      scheme:
+        description: The API is accessible via https and http
+        enum:
+          - https
+          - http
+        default: http
+      host:
+        default: '{{index . "server.URL.Host.Default"}}'
+
+tags:
+  - name: Systems
+    description: >-
+      [Generic (sub)Domain] Systems
+  - name: GeoLocation
+    description: >-
+      [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM, ElasticSearch)
+
+security:
+  - bearerAuth: []
+
+paths:
+  # System
+  /system/health:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.CheckHealth
+      summary: System Health Check
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+  # GeoLocation
+  /api/v1/geolocation/countries/list-all:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.ListALl
+      summary: Display Country List
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+  /api/v1/geolocation/countries/indexer/refresh:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.RefreshIndexer
+      summary: Refresh Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: "#/components/requestBodies/geoLocation.Country.RefreshIndexer.Request"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+  /api/v1/geolocation/countries/indexer/search:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.SearchIndexer
+      summary: Search Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: "#/components/requestBodies/geoLocation.Country.SearchIndexer.Request"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+  /api/v1/geolocation/country:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Add
+      summary: Add Country
+      requestBody:
+        $ref: "#/components/requestBodies/geoLocation.Country.Add.Request"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+  /api/v1/geolocation/country/{code}:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.GetDetail
+      summary: Get Detail Country
+      parameters:
+        - $ref: "#/components/parameters/geoLocation.param.countryCode"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+    put:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Update
+      summary: Update Country
+      requestBody:
+        $ref: "#/components/requestBodies/geoLocation.Country.Update.Request"
+      parameters:
+        - $ref: "#/components/parameters/geoLocation.param.countryCode"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+    delete:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Delete
+      summary: Delete Country
+      parameters:
+        - $ref: "#/components/parameters/geoLocation.param.countryCode"
+      responses:
+        default:
+          $ref: "#/components/responses/GeneralResponse"
+
+components:
+  #SecuritySchemes
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # Parameters
+  parameters:
+    # GeoLocation
+    geoLocation.param.countryCode:
+      in: path
+      name: code
+      description: >-
+        Country Code (example: ID)
+      schema:
+        type: string
+      required: true
+      example: ID
+
+  # Request Bodies
+  requestBodies:
+    # GeoLocation
+    geoLocation.Country.Add.Request:
+      description: Add Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/geoLocation.Country.Add.Request"
+          examples:
+            Detail:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code:
+                WHORegion: SEARO
+
+    geoLocation.Country.RefreshIndexer.Request:
+      description: Refresh Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/geoLocation.Country.RefreshIndexer.Request"
+          examples:
+            Sync:
+              value:
+                processType: SYNC
+            Async:
+              value:
+                processType: ASYNC
+
+    geoLocation.Country.SearchIndexer.Request:
+      description: Search Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/geoLocation.Country.SearchIndexer.Request"
+          examples:
+            Min2Char:
+              value:
+                name: IN
+            More2Char:
+              value:
+                name: IND
+
+    geoLocation.Country.Update.Request:
+      description: Update Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/geoLocation.Country.Update.Request"
+          examples:
+            Detail:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code:
+                WHORegion: SEARO
+
+  responses:
+    GeneralResponse:
+      description: General Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralResponse"
+
+  # Schemas
+  schemas:
+    GeneralResponse:
+      required:
+        - status
+        - response
+        - serverInfo
+      properties:
+        status:
+          type: string
+          enum:
+            - OK
+            - ERROR
+          example: OK
+        response:
+          type: object
+        serverInfo:
+          type: object
+
+    # GeoLocation
+    geoLocation.Country.Add.Request:
+      type: object
+      properties:
+        code:
+          $ref: "#/components/schemas/geoLocation.field.country.code"
+        name:
+          $ref: "#/components/schemas/geoLocation.field.country.name"
+        ISO2Code:
+          $ref: "#/components/schemas/geoLocation.field.country.ISO2Code"
+        ISO3Code:
+          $ref: "#/components/schemas/geoLocation.field.country.ISO3Code"
+        WHORegion:
+          $ref: "#/components/schemas/geoLocation.field.country.WHORegion"
+
+    geoLocation.Country.RefreshIndexer.Request:
+      type: object
+      properties:
+        processType:
+          $ref: "#/components/schemas/geoLocation.indexer.field.processingType"
+
+    geoLocation.Country.SearchIndexer.Request:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/geoLocation.field.country.name"
+
+    geoLocation.indexer.field.processingType:
+      type: string
+      example: SYNC
+      enum:
+        - SYNC
+        - ASYNC
+
+    geoLocation.Country.Update.Request:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/geoLocation.field.country.name"
+        ISO2Code:
+          $ref: "#/components/schemas/geoLocation.field.country.ISO2Code"
+        ISO3Code:
+          $ref: "#/components/schemas/geoLocation.field.country.ISO3Code"
+        WHORegion:
+          $ref: "#/components/schemas/geoLocation.field.country.WHORegion"
+
+    geoLocation.field.country.code:
+      type: string
+      example: ID
+    geoLocation.field.country.name:
+      type: string
+      example: INDONESIA
+    geoLocation.field.country.ISO2Code:
+      type: string
+      example: ID
+    geoLocation.field.country.ISO3Code:
+      type: string
+      example: IDN
+    geoLocation.field.country.WHORegion:
+      type: string
+      example: SEARO
