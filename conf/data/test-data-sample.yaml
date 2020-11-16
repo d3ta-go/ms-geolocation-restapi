@@ -1,0 +1,45 @@
+---
+# Test Data
+test-data:
+  geo-location:
+    country:
+      interface-layer:
+        features:
+          add:
+            request:
+              code: XX
+              iso2-code: XX
+              iso3-code: X3X
+              name: XX Country
+              who-region: WPRO
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"},"data":{"ID":256,"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-16T22:13:25.964633+07:00"}}'
+          delete:
+            request:
+              code: XX
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX"},"data":{"ID":256,"code":"XX","name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-16T22:13:26.280656+07:00"}}'
+          get-detail:
+            request:
+              code: XX
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX"},"data":{"ID":256,"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-16T22:13:26.02509+07:00"}}'
+          refresh-indexer:
+            request:
+              processing-type: SYNC
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"status":"OK","processType":"SYNC"}},"serverInfo":{"serverTime":"2020-11-16T22:13:25.830469+07:00"}}'
+          search-indexer:
+            request:
+              name: IND
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"name":"IND"},"data":[{"ID":95,"code":"IN","name":"INDIA","ISO2Code":"IN","ISO3Code":"IND","WHORegion":"SEARO"},{"ID":93,"code":"ID","name":"INDONESIA UPDATED","ISO2Code":"ID","ISO3Code":"IDN","WHORegion":"SEARO"}]}},"serverInfo":{"serverTime":"2020-11-16T22:13:25.881759+07:00"}}'
+          update:
+            request:
+              code: XX
+              iso2-code: X2
+              iso3-code: X32
+              name: XX Country Updated
+              who-region: WPRO
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"keys":{"code":"XX"},"data":{"name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}},"data":{"ID":256,"code":"XX","name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-16T22:13:26.217793+07:00"}}'
