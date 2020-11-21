@@ -1,4 +1,4 @@
-# ms-geolocation-restapi
+# ms-geolocation-restapi ( [![Go Report Card](https://goreportcard.com/badge/github.com/d3ta-go/ms-geolocation-restapi)](https://goreportcard.com/report/github.com/d3ta-go/ms-geolocation-restapi) )
 
 MicroService Interface/Presentation App: GeoLocation RestAPI
 
